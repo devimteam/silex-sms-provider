@@ -1,0 +1,22 @@
+{
+  "type": "library",
+  "name": "devimteam/silex-sms-provider",
+  "description": "Silex SMSc service provider",
+
+  "keywords": [],
+  "license": "",
+  "authors": [],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+
+  "autoload": {
+    "psr-4": {
+      "Devim\\Provider\\SmsServiceProvider\\": "src/"
+    }
+  },
+
+  "require": {
+    "php": ">=7.0.7",
+    "silex/silex": "~2.0.3-DEV"
+  }
+}
