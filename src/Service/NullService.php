@@ -2,20 +2,20 @@
 
 namespace Devim\Provider\SmsServiceProvider;
 
-class NullService implements ServiceInterface
+class NullService implements SmsServiceInterface
 {
-    public function send(string $phone, string $text, string $shortCode)
+    public function send(string $phone, string $text, string $shortCode = null) : array
     {
-
+        return [];
     }
 
-    public function check()
+    public function check(string $transactionId, string $phone = null) : array
     {
-
+        return [];
     }
 
-    public function receive()
+    public function receive() : array
     {
-
+        return [];
     }
 }
