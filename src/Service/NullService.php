@@ -1,21 +1,21 @@
 <?php
 
-namespace Devim\Provider\SmsServiceProvider;
+namespace Devim\Provider\SmsServiceProvider\Service;
 
 class NullService implements SmsServiceInterface
 {
-    public function send(string $phone, string $text, string $shortCode = null) : array
+    public function send(string $phone, string $text, string $shortCode = null)
     {
-        return [];
+        return '1';
     }
 
-    public function check(string $transactionId, string $phone = null) : array
+    public function check(string $transactionId, string $phone = null)
     {
-        return [];
+        return;
     }
 
-    public function receive() : array
+    public function receive()
     {
-        return [];
+        return;
     }
 }

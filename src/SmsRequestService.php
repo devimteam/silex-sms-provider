@@ -2,21 +2,19 @@
 
 namespace Devim\Provider\SmsServiceProvider;
 
-use Devim\Provider\SmsServiceProvider\Exception\SmsErrorException;
 use Devim\Provider\SmsServiceProvider\Exception\SmsSendException;
 
 class SmsRequestService
 {
     /**
-     * @param array $data
+     * @param $data
      * @param string $url
      *
      * @return string
      *
      * @throws SmsSendException
-     * @throws SmsErrorException
      */
-    public static function process(array $data, string $url) : string
+    public static function process($data, string $url) : string
     {
         $ch = curl_init();
 

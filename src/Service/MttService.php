@@ -1,8 +1,9 @@
 <?php
 
-namespace Devim\Provider\SmsServiceProvider;
+namespace Devim\Provider\SmsServiceProvider\Service;
 
-use Devim\Provider\SmsServiceProvider\Helper\MttResponseAnalyzer;
+use Devim\Provider\SmsServiceProvider\Helper\MttResponseFilter;
+use Devim\Provider\SmsServiceProvider\SmsRequestService;
 
 class MttService implements SmsServiceInterface
 {
@@ -40,9 +41,9 @@ class MttService implements SmsServiceInterface
      * @param string $text
      * @param string|null $shortCode
      *
-     * @return array
+     * @return string
      */
-    public function send(string $phone, string $text, string $shortCode = null) : array
+    public function send(string $phone, string $text, string $shortCode = null) : string
     {
         $data = [
             'msisdn' => $phone,
@@ -50,26 +51,26 @@ class MttService implements SmsServiceInterface
             'shortcode' => $shortCode,
             'operation' => 'send',
         ];
-        $this->applyCredentials($data);
+        $this->applyCredentialsAndBuildParams($data);
 
-        return MttResponseAnalyzer::check(SmsRequestService::process($data, $this->url));
+        return MttResponseFilter::filter(SmsRequestService::process($data, $this->url));
     }
 
     /**
      * @param string $transactionId
      * @param string|null $phone
      *
-     * @return array
+     * @return int
      */
-    public function check(string $transactionId, string $phone = null) : array
+    public function check(string $transactionId, string $phone = null) : int
     {
         $data = [
             'id' => $transactionId,
             'operation' => 'status'
         ];
-        $this->applyCredentials($data);
+        $this->applyCredentialsAndBuildParams($data);
 
-        return MttResponseAnalyzer::check(SmsRequestService::process($data, $this->url));
+        return MttResponseFilter::filter(SmsRequestService::process($data, $this->url));
     }
 
     /**
@@ -83,9 +84,11 @@ class MttService implements SmsServiceInterface
     /**
      * @param $data
      */
-    private function applyCredentials(array &$data)
+    private function applyCredentialsAndBuildParams(array &$data)
     {
         $data['login'] = $this->login;
         $data['password'] = $this->password;
+
+        $data = http_build_query($data);
     }
 }

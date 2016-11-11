@@ -1,6 +1,9 @@
 <?php
 
-namespace Devim\Provider\SmsServiceProvider;
+namespace Devim\Provider\SmsServiceProvider\Service;
+
+use Devim\Provider\SmsServiceProvider\Helper\SmscResponseFilter;
+use Devim\Provider\SmsServiceProvider\SmsRequestService;
 
 class SmscService implements SmsServiceInterface
 {
@@ -18,7 +21,7 @@ class SmscService implements SmsServiceInterface
     private $password;
 
     /**
-     * @var string
+     * @var array
      */
     private $urls;
 
@@ -27,9 +30,9 @@ class SmscService implements SmsServiceInterface
      *
      * @param string $login
      * @param string $password
-     * @param string $urls
+     * @param array $urls
      */
-    public function __construct(string $login, string $password, string $urls)
+    public function __construct(string $login, string $password, array $urls)
     {
         $this->login = $login;
         $this->password = $password;
@@ -53,7 +56,7 @@ class SmscService implements SmsServiceInterface
         ];
         $this->applyCredentials($data);
 
-        return $this->decode(SmsRequestService::process($data, $this->urls['send']));
+        return SmscResponseFilter::filter($this->decode(SmsRequestService::process($data, $this->urls['sendUrl'])));
     }
 
     /**
@@ -71,7 +74,7 @@ class SmscService implements SmsServiceInterface
         ];
         $this->applyCredentials($data);
 
-        return $this->decode(SmsRequestService::process($data, $this->urls['send']));
+        return SmscResponseFilter::filter($this->decode(SmsRequestService::process($data, $this->urls['checkUrl'])));
     }
 
     /**
@@ -81,11 +84,12 @@ class SmscService implements SmsServiceInterface
     {
         $data = [
             'fmt' => self::JSON_FORMAT,
-            'hour' => self::LAST_HOUR_RESULT
+            'hour' => self::LAST_HOUR_RESULT,
+            'get_answers' => 1
         ];
         $this->applyCredentials($data);
 
-        return $this->decode(SmsRequestService::process($data, $this->urls['send']));
+        return SmscResponseFilter::filter($this->decode(SmsRequestService::process($data, $this->urls['receiveUrl'])));
     }
 
     /**
@@ -94,7 +98,7 @@ class SmscService implements SmsServiceInterface
     private function applyCredentials(array &$data)
     {
         $data['login'] = $this->login;
-        $data['password'] = $this->password;
+        $data['psw'] = $this->password;
     }
 
     private function decode(string $response)

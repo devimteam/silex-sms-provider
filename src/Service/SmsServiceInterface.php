@@ -1,6 +1,6 @@
 <?php
 
-namespace Devim\Provider\SmsServiceProvider;
+namespace Devim\Provider\SmsServiceProvider\Service;
 
 interface SmsServiceInterface
 {
